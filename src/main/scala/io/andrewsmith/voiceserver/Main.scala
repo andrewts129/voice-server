@@ -29,7 +29,7 @@ object Main extends IOApp {
 
   override def run(args: List[String]): IO[ExitCode] =
     BlazeServerBuilder[IO](global)
-      .bindHttp(3000)
+      .bindHttp(3000, "0.0.0.0")
       .withHttpApp(service)
       .serve
       .compile
