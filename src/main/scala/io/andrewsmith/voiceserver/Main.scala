@@ -24,8 +24,10 @@ object Main extends IOApp {
   }
 
   private val service = HttpRoutes.of[IO] {
-    case GET -> Root / text =>
-      Ok(getWav(text), `Content-Type`(MediaType.audio.wav))
+    case request @ POST -> Root =>
+      request.as[String].flatMap(
+        text => Ok(getWav(text), `Content-Type`(MediaType.audio.wav))
+      )
   }.orNotFound
 
   override def run(args: List[String]): IO[ExitCode] =
