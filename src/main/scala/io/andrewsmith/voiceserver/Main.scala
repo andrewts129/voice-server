@@ -13,9 +13,9 @@ import org.http4s.implicits._
 import org.http4s.server.blaze._
 
 object Main extends IOApp {
-  private def getWav: Array[Byte] = {
+  private def getWav(text: String): Array[Byte] = {
     val out = new ByteArrayOutputStream()
-    val exitCode = "text2wave test.txt" #> out !< ProcessLogger(_ => ())
+    val exitCode = s"echo $text" #| "text2wave" #> out !< ProcessLogger(_ => ())
     exitCode match {
       case 0 => out.toByteArray
       case _ => throw new RuntimeException(s"error")
@@ -23,8 +23,8 @@ object Main extends IOApp {
   }
 
   private val service = HttpRoutes.of[IO] {
-    case GET -> Root =>
-      Ok(getWav, `Content-Type`(MediaType.audio.wav))
+    case GET -> Root / text =>
+      Ok(getWav(text), `Content-Type`(MediaType.audio.wav))
   }.orNotFound
 
   override def run(args: List[String]): IO[ExitCode] =
