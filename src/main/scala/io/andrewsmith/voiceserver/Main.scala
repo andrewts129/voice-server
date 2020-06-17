@@ -5,9 +5,9 @@ import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import scala.concurrent.ExecutionContext.global
 import scala.sys.process._
 import cats.effect._
-import org.http4s.{HttpRoutes, MediaType}
+import org.http4s.{HttpRoutes, MediaType, Uri}
 import org.http4s.dsl.io._
-import org.http4s.headers.`Content-Type`
+import org.http4s.headers.{Location, `Content-Type`}
 import org.http4s.implicits._
 import org.http4s.server.blaze._
 
@@ -24,6 +24,8 @@ object Main extends IOApp {
   }
 
   private val service = HttpRoutes.of[IO] {
+    case GET -> Root =>
+      SeeOther(Location(Uri(path = "https://andrewsmith.io/speak")))
     case GET -> Root / text =>
       Ok(getWav(text), `Content-Type`(MediaType.audio.wav))
   }.orNotFound
