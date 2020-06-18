@@ -12,11 +12,11 @@ import org.http4s.implicits._
 import org.http4s.server.blaze._
 
 object Main extends IOApp {
-  private def getWav(text: String): Array[Byte] = {
+  private def getMp3(text: String): Array[Byte] = {
     val inputStream = new ByteArrayInputStream(text.getBytes)
     val outputStream = new ByteArrayOutputStream()
 
-    val exitCode = "text2wave" #< inputStream #> outputStream !< ProcessLogger(_ => ())
+    val exitCode = "text2wave" #< inputStream #| "lame - -" #> outputStream !< ProcessLogger(_ => ())
     exitCode match {
       case 0 => outputStream.toByteArray
       case _ => throw new RuntimeException(s"Nonzero exit value ($exitCode) for input: $text")
@@ -28,7 +28,7 @@ object Main extends IOApp {
       SeeOther(Location(Uri(path = "https://andrewsmith.io/chat")))
     case GET -> Root / text =>
       if (text.length < 1500) {
-        Ok(getWav(text), `Content-Type`(MediaType.audio.wav))
+        Ok(getMp3(text), `Content-Type`(MediaType.audio.mp3))
       } else {
         BadRequest()
       }

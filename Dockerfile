@@ -13,6 +13,8 @@ RUN native-image --no-server --static -H:+ReportExceptionStackTraces -H:UseMuslC
 
 FROM andrewts129/festival-base-image:latest
 
+RUN apt update && apt install -y lame
+
 COPY --from=compiler /app/voice-server /usr/local/bin/voice-server
 
 EXPOSE 3000
