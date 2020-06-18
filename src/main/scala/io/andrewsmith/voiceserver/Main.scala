@@ -27,7 +27,11 @@ object Main extends IOApp {
     case GET -> Root =>
       SeeOther(Location(Uri(path = "https://andrewsmith.io/chat")))
     case GET -> Root / text =>
-      Ok(getWav(text), `Content-Type`(MediaType.audio.wav))
+      if (text.length < 1500) {
+        Ok(getWav(text), `Content-Type`(MediaType.audio.wav))
+      } else {
+        BadRequest()
+      }
   }.orNotFound
 
   override def run(args: List[String]): IO[ExitCode] =
