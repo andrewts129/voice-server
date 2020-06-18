@@ -25,7 +25,7 @@ object Main extends IOApp {
 
   private val service = HttpRoutes.of[IO] {
     case GET -> Root =>
-      SeeOther(Location(Uri(path = "https://andrewsmith.io/speak")))
+      SeeOther(Location(Uri(path = "https://andrewsmith.io/chat")))
     case GET -> Root / text =>
       Ok(getWav(text), `Content-Type`(MediaType.audio.wav))
   }.orNotFound
