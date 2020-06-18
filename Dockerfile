@@ -11,7 +11,7 @@ WORKDIR /app
 RUN sbt assembly
 RUN native-image --no-server --static -H:+ReportExceptionStackTraces -H:UseMuslC="/bundle" --allow-incomplete-classpath --no-fallback --initialize-at-build-time --enable-http --enable-https --enable-all-security-services --verbose -jar "./target/scala-2.13/voice-server-assembly-0.0.1-SNAPSHOT.jar" voice-server
 
-FROM andrewts129/voice-base-image:latest
+FROM andrewts129/festival-base-image:latest
 
 COPY --from=compiler /app/voice-server /usr/local/bin/voice-server
 
